@@ -15,6 +15,3 @@ urlpatterns = [
     path('history/<int:result_id>/', views.classification_result_detail, name='classification_result_detail'),
 ]
 
-# Serve media files during development
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
