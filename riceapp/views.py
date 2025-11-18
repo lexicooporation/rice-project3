@@ -20,21 +20,20 @@ from django.conf import settings
 
 # Load trained model with fallback for production
 try:
-    # Try absolute path first (for local development)
-    model = tf.keras.models.load_model(r'C:\Users\HP\Documents\clinton\rice_project\models\2')
-    print("Model loaded from absolute path")
+    # Try relative path for production - adjust based on your actual structure
+    model_path = os.path.join(settings.BASE_DIR, 'riceapp', 'models', '2')
+    model = tf.keras.models.load_model(model_path)
+    print("Model loaded successfully from SavedModel format")
 except Exception as e:
     try:
-        # Try relative path for production
+        # Alternative path structure
         model_path = os.path.join(settings.BASE_DIR, 'models', '2')
         model = tf.keras.models.load_model(model_path)
-        print("Model loaded from relative path")
+        print("Model loaded from alternative path")
     except Exception as e2:
-        # Create a dummy model for initial deployment
         print(f"Model loading failed: {e2}")
-        # You'll need to upload your model files to GitHub
         model = None
-
+        
 # UPDATE CLASS NAMES TO MATCH NEW MODEL
 class_names = ['Bacterial Leaf Blight', 'Brown Spot', 'Healthy Rice Leaf', 'Leaf Blast', 'Sheath Blight']
 
