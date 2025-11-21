@@ -21,7 +21,7 @@ from django.conf import settings
 # Load trained model with fallback for production
 try:
     # Try absolute path first (for local development)
-    model = tf.keras.models.load_model(r'C:\Users\HP\Documents\clinton\rice_project\models\2')
+    model = tf.keras.models.load_model(r'C:\Users\HP\Documents\clinton\rice_project\rice website\rice_detect\models\2')
     print("Model loaded from absolute path")
 except Exception as e:
     try:
@@ -35,7 +35,7 @@ except Exception as e:
         # You'll need to upload your model files to GitHub
         model = None
 
-# UPDATE CLASS NAMES TO MATCH NEW MODEL
+#CLASS NAMES
 class_names = ['Bacterial Leaf Blight', 'Brown Spot', 'Healthy Rice Leaf', 'Leaf Blast', 'Sheath Blight']
 
 # Load disease information from JSON
@@ -44,7 +44,7 @@ def load_disease_info():
         with open('rice_disease_info.json', 'r', encoding='utf-8') as f:
             return json.load(f)
     except FileNotFoundError:
-        # Fallback data if JSON file is not found - UPDATED FOR NEW CLASSES
+        # Fallback data if JSON file is not found
         return {
             'Bacterial Leaf Blight': {
                 'disease_name': 'Bacterial Leaf Blight',
@@ -311,7 +311,7 @@ def load_disease_info():
 
 disease_info = load_disease_info()
 
-# ADD THIS NEW FUNCTION FOR LEAF DETECTION
+#FUNCTION FOR LEAF DETECTION
 def is_leaf_like(image):
     """Basic checks for leaf-like characteristics"""
     try:
@@ -370,7 +370,7 @@ def login_view(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
-                messages.success(request, f'Welcome back, {username}!')
+                # messages.success(request, f'Welcome back, {username}!')
                 next_url = request.GET.get('next', 'home')
                 return redirect(next_url)
         else:
