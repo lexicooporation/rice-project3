@@ -59,7 +59,16 @@
                     <div class="col-12 col-md-6 text-center">
                         <div class="image-container position-relative">
                             <h6 class="mb-3 text-muted small fw-semibold">Uploaded Image</h6>
-                            <img src="{{ uploaded_file_url }}" alt="Uploaded rice leaf" class="result-image img-thumbnail rounded w-100" style="max-height: 280px; object-fit: cover;">
+                            {% if uploaded_file_url %}
+                                <img src="{{ uploaded_file_url }}" alt="Uploaded rice leaf" class="result-image img-thumbnail rounded w-100" style="max-height: 280px; object-fit: cover;" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjU2IiBoZWlnaHQ9IjI1NiIgdmlld0JveD0iMCAwIDI1NiAyNTYiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyNTYiIGhlaWdodD0iMjU2IiBmaWxsPSIjRjBGMEYwIi8+CjxwYXRoIGQ9Ik05OCAxMjhDOTggMTE2Ljk1NCAxMDYuOTU0IDEwOCAxMTggMTA4QzEyOS4wNDYgMTA4IDEzOCAxMTYuOTU0IDEzOCAxMjhDMTM4IDEzOS4wNDYgMTI5LjA0NiAxNDggMTE4IDE0OEMxMDYuOTU0IDE0OCA5OCAxMzkuMDQ2IDk4IDEyOFoiIGZpbGw9IiNEOEQ4RDgiLz4KPHBhdGggZD0iTTE0NiAxMjhMMTI0IDEwOEwxMDIgMTI4TDEyNCAxNDhMMTQ2IDEyOFoiIGZpbGw9IiNEOEQ4RDgiLz4KPHRleHQgeD0iMTI4IiB5PSIxODAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSI+RW1wdHkgSW1hZ2U8L3RleHQ+Cjwvc3ZnPgo='; this.alt='Image not available';">
+                            {% else %}
+                                <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 280px;">
+                                    <div class="text-center text-muted">
+                                        <i class="bi bi-image fs-1"></i>
+                                        <p class="mt-2 mb-0">No image available</p>
+                                    </div>
+                                </div>
+                            {% endif %}
                             <div class="image-badge">
                                 <i class="bi bi-check-circle-fill text-success me-1"></i>Analyzed
                             </div>
@@ -609,4 +618,24 @@
     }
 }
 </style>
+
+<script>
+// Image error handling
+document.addEventListener('DOMContentLoaded', function() {
+    const images = document.querySelectorAll('img');
+    
+    images.forEach(img => {
+        img.addEventListener('error', function() {
+            console.log('Image failed to load:', this.src);
+            // Set a placeholder image
+            this.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjU2IiBoZWlnaHQ9IjI1NiIgdmlld0JveD0iMCAwIDI1NiAyNTYiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyNTYiIGhlaWdodD0iMjU2IiBmaWxsPSIjRjBGMEYwIi8+CjxwYXRoIGQ9Ik05OCAxMjhDOTggMTE2Ljk1NCAxMDYuOTU0IDEwOCAxMTggMTA4QzEyOS4wNDYgMTA4IDEzOCAxMTYuOTU0IDEzOCAxMjhDMTM4IDEzOS4wNDYgMTI5LjA0NiAxNDggMTE4IDE0OEMxMDYuOTU0IDE0OCA5OCAxMzkuMDQ2IDk4IDEyOFoiIGZpbGw9IiNEOEQ4RDgiLz4KPHBhdGggZD0iTTE0NiAxMjhMMTI0IDEwOEwxMDIgMTI4TDEyNCAxNDhMMTQ2IDEyOFoiIGZpbGw9IiNEOEQ4RDgiLz4KPHRleHQgeD0iMTI4IiB5PSIxODAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSI+RW1wdHkgSW1hZ2U8L3RleHQ+Cjwvc3ZnPgo=';
+            this.alt = 'Image not available';
+        });
+        
+        img.addEventListener('load', function() {
+            console.log('Image loaded successfully:', this.src);
+        });
+    });
+});
+</script>
 {% endblock %}
