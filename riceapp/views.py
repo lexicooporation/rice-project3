@@ -469,6 +469,9 @@ def classify_rice_disease(request):
         # Get disease information
         current_disease_info = disease_info.get(predicted_class, {})
         
+        # FIX: Create absolute URL for the image
+        absolute_file_url = request.build_absolute_uri(uploaded_file_url)
+        
         # Save classification result to database only if user is logged in
         if request.user.is_authenticated:
             classification_result = ClassificationResult.objects.create(
@@ -484,7 +487,7 @@ def classify_rice_disease(request):
             result_id = None
         
         context = {
-            'uploaded_file_url': uploaded_file_url,
+            'uploaded_file_url': absolute_file_url,  # Use absolute URL instead of relative
             'predicted_class': predicted_class,
             'confidence': confidence,
             'class_probabilities': class_probabilities,

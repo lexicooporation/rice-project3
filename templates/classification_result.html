@@ -60,7 +60,10 @@
                         <div class="image-container position-relative">
                             <h6 class="mb-3 text-muted small fw-semibold">Uploaded Image</h6>
                             {% if uploaded_file_url %}
-                                <img src="{{ uploaded_file_url }}" alt="Uploaded rice leaf" class="result-image img-thumbnail rounded w-100" style="max-height: 280px; object-fit: cover;" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjU2IiBoZWlnaHQ9IjI1NiIgdmlld0JveD0iMCAwIDI1NiAyNTYiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyNTYiIGhlaWdodD0iMjU2IiBmaWxsPSIjRjBGMEYwIi8+CjxwYXRoIGQ9Ik05OCAxMjhDOTggMTE2Ljk1NCAxMDYuOTU0IDEwOCAxMTggMTA4QzEyOS4wNDYgMTA4IDEzOCAxMTYuOTU0IDEzOCAxMjhDMTM4IDEzOS4wNDYgMTI5LjA0NiAxNDggMTE4IDE0OEMxMDYuOTU0IDE0OCA5OCAxMzkuMDQ2IDk4IDEyOFoiIGZpbGw9IiNEOEQ4RDgiLz4KPHBhdGggZD0iTTE0NiAxMjhMMTI0IDEwOEwxMDIgMTI4TDEyNCAxNDhMMTQ2IDEyOFoiIGZpbGw9IiNEOEQ4RDgiLz4KPHRleHQgeD0iMTI4IiB5PSIxODAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSI+RW1wdHkgSW1hZ2U8L3RleHQ+Cjwvc3ZnPgo='; this.alt='Image not available';">
+                                <img src="{{ uploaded_file_url }}" alt="Uploaded rice leaf" 
+                                    class="result-image img-thumbnail rounded w-100" 
+                                    style="max-height: 280px; object-fit: cover;"
+                                    onerror="handleImageError(this)">
                             {% else %}
                                 <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 280px;">
                                     <div class="text-center text-muted">
@@ -618,23 +621,51 @@
     }
 }
 </style>
-
 <script>
-// Image error handling
+function handleImageError(img) {
+    console.error('Image failed to load:', img.src);
+    
+    // Create a more informative placeholder
+    const placeholder = `
+        <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 280px; width: 100%;">
+            <div class="text-center text-muted">
+                <i class="bi bi-exclamation-triangle fs-1"></i>
+                <p class="mt-2 mb-0">Image not available</p>
+                <small>URL: ${img.src}</small>
+            </div>
+        </div>
+    `;
+    
+    // Replace the image with the placeholder
+    const container = img.parentNode;
+    container.innerHTML = `
+        <h6 class="mb-3 text-muted small fw-semibold">Uploaded Image</h6>
+        ${placeholder}
+        <div class="image-badge">
+            <i class="bi bi-exclamation-triangle text-warning me-1"></i>Image Error
+        </div>
+    `;
+}
+
+// Debug image loading
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('Checking result page images...');
     const images = document.querySelectorAll('img');
     
-    images.forEach(img => {
-        img.addEventListener('error', function() {
-            console.log('Image failed to load:', this.src);
-            // Set a placeholder image
-            this.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjU2IiBoZWlnaHQ9IjI1NiIgdmlld0JveD0iMCAwIDI1NiAyNTYiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyNTYiIGhlaWdodD0iMjU2IiBmaWxsPSIjRjBGMEYwIi8+CjxwYXRoIGQ9Ik05OCAxMjhDOTggMTE2Ljk1NCAxMDYuOTU0IDEwOCAxMTggMTA4QzEyOS4wNDYgMTA4IDEzOCAxMTYuOTU0IDEzOCAxMjhDMTM4IDEzOS4wNDYgMTI5LjA0NiAxNDggMTE4IDE0OEMxMDYuOTU0IDE0OCA5OCAxMzkuMDQ2IDk4IDEyOFoiIGZpbGw9IiNEOEQ4RDgiLz4KPHBhdGggZD0iTTE0NiAxMjhMMTI0IDEwOEwxMDIgMTI4TDEyNCAxNDhMMTQ2IDEyOFoiIGZpbGw9IiNEOEQ4RDgiLz4KPHRleHQgeD0iMTI4IiB5PSIxODAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSI+RW1wdHkgSW1hZ2U8L3RleHQ+Cjwvc3ZnPgo=';
-            this.alt = 'Image not available';
+    images.forEach((img, index) => {
+        console.log(`Image ${index}:`, {
+            src: img.src,
+            alt: img.alt,
+            complete: img.complete,
+            naturalWidth: img.naturalWidth,
+            naturalHeight: img.naturalHeight
         });
         
-        img.addEventListener('load', function() {
-            console.log('Image loaded successfully:', this.src);
-        });
+        // Check if image loaded successfully
+        if (img.complete && img.naturalWidth === 0) {
+            console.error('Image failed to load:', img.src);
+            handleImageError(img);
+        }
     });
 });
 </script>
