@@ -417,17 +417,14 @@ def classification_result_detail(request, result_id):
     
     return render(request, 'classification_result.html', context)
 
+@login_required
 def classify_rice_disease(request):
     if request.method == 'POST' and request.FILES.get('image'):
-        # Save uploaded file
+        # Save uploaded file directly using the model's ImageField
         uploaded_file = request.FILES['image']
-        fs = FileSystemStorage()
-        filename = fs.save(uploaded_file.name, uploaded_file)
-        uploaded_file_url = fs.url(filename)
         
-        # Preprocess image
-        image_path = fs.path(filename)
-        image = Image.open(image_path)
+        # Preprocess image from memory (no need to save temporarily)
+        image = Image.open(uploaded_file)
         
         # Convert to RGB if needed
         if image.mode != 'RGB':
@@ -436,10 +433,8 @@ def classify_rice_disease(request):
         # CHECK IF IMAGE IS LEAF-LIKE BEFORE CLASSIFICATION
         if not is_leaf_like(image):
             context = {
-                'uploaded_file_url': uploaded_file_url,
                 'error': 'The uploaded image does not appear to be a rice leaf. Please upload a clear image of a rice leaf for accurate disease detection.',
             }
-            # Render the upload page again with error message
             return render(request, 'upload_image.html', context)
             
         # Resize to match model input
@@ -464,20 +459,26 @@ def classify_rice_disease(request):
         # Get disease information
         current_disease_info = disease_info.get(predicted_class, {})
         
-        
         # Save classification result to database only if user is logged in
         if request.user.is_authenticated:
             classification_result = ClassificationResult.objects.create(
                 user=request.user,
-                image=uploaded_file,
+                image=uploaded_file,  # This will save to MEDIA_ROOT/classification_images/
                 predicted_class=predicted_class,
                 confidence=confidence,
                 class_probabilities=class_probabilities,
                 disease_info=current_disease_info
             )
             result_id = classification_result.id
+            
+            # Get the actual saved image URL from the model
+            uploaded_file_url = classification_result.image.url
         else:
             result_id = None
+            # For anonymous users, we need to handle file storage differently
+            fs = FileSystemStorage()
+            filename = fs.save(uploaded_file.name, uploaded_file)
+            uploaded_file_url = fs.url(filename)
         
         context = {
             'uploaded_file_url': uploaded_file_url,  
