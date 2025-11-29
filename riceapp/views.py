@@ -15,9 +15,6 @@ from .models import ClassificationResult
 from .forms import CustomUserCreationForm, CustomAuthenticationForm, ImageUploadForm
 from django.conf import settings
 
-
-
-
 # Load trained model with fallback for production
 try:
     # Try absolute path first (for local development)
@@ -358,8 +355,8 @@ def register_view(request):
             messages.error(request, 'Please correct the errors below.')
     else:
         form = CustomUserCreationForm()
-    
     return render(request, 'register.html', {'form': form})
+
 
 def login_view(request):
     if request.method == 'POST':
@@ -370,7 +367,6 @@ def login_view(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
-                # messages.success(request, f'Welcome back, {username}!')
                 next_url = request.GET.get('next', 'home')
                 return redirect(next_url)
         else:

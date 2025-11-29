@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from .models import ClassificationResult
 
 # Custom user registration form that extends Django's built-in UserCreationForm
+
 class CustomUserCreationForm(UserCreationForm):
     # Add an email field that is required
     email = forms.EmailField(required=True, widget=forms.EmailInput(attrs={
@@ -28,6 +29,7 @@ class CustomUserCreationForm(UserCreationForm):
             })
 
 # Custom authentication form that extends Django's built-in AuthenticationForm
+
 class CustomAuthenticationForm(AuthenticationForm):
     # Custom initialization method to apply styling to all form fields
     def __init__(self, *args, **kwargs):
