@@ -634,7 +634,7 @@ body.dark-mode .alert-info {
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav my-2 ms-auto">
                     <li class="nav-item">
                         <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{% url 'home' %}">
                             <i class="bi bi-house me-1"></i>Home
@@ -657,12 +657,12 @@ body.dark-mode .alert-info {
                         </a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="{% url 'classification_history' %}">
-                                <i class="bi bi-clock-history me-2"></i>Classification History
-                            </a></li>
+                                <i class="bi bi-clock-history me-2"></i>Classification History</a>
+                            </li>
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="{% url 'logout' %}">
-                                <i class="bi bi-box-arrow-right me-2"></i>Logout
-                            </a></li>
+                                <i class="bi bi-box-arrow-right me-2"></i>Logout</a>
+                            </li>
                         </ul>
                     </li>
                     {% else %}
