@@ -9,7 +9,6 @@ class ClassificationResult(models.Model):
     confidence = models.FloatField()
     class_probabilities = models.JSONField()  # Store all class probabilities
     uploaded_at = models.DateTimeField(default=timezone.now)
-    
     # Disease information (if available)
     disease_info = models.JSONField(null=True, blank=True)
     

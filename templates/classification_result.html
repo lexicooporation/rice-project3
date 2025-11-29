@@ -63,7 +63,14 @@
                                 <img src="{{ uploaded_file_url }}" alt="Uploaded rice leaf" 
                                     class="result-image img-thumbnail rounded w-100" 
                                     style="max-height: 280px; object-fit: cover;"
-                                    onerror="handleImageError(this)">
+                                    onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                                <div class="bg-light rounded d-flex align-items-center justify-content-center" 
+                                    style="height: 280px; display: none;">
+                                    <div class="text-center text-muted">
+                                        <i class="bi bi-image fs-1"></i>
+                                        <p class="mt-2 mb-0">Image not available</p>
+                                    </div>
+                                </div>
                             {% else %}
                                 <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 280px;">
                                     <div class="text-center text-muted">
@@ -621,52 +628,18 @@
     }
 }
 </style>
-<!-- <script>
+<script>
+// Add this to both templates or your base template
 function handleImageError(img) {
-    console.error('Image failed to load:', img.src);
-    
-    // Create a more informative placeholder
-    const placeholder = `
-        <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 280px; width: 100%;">
-            <div class="text-center text-muted">
-                <i class="bi bi-exclamation-triangle fs-1"></i>
-                <p class="mt-2 mb-0">Image not available</p>
-                <small>URL: ${img.src}</small>
-            </div>
-        </div>
-    `;
-    
-    // Replace the image with the placeholder
+    console.log('Image failed to load, showing placeholder');
     const container = img.parentNode;
-    container.innerHTML = `
-        <h6 class="mb-3 text-muted small fw-semibold">Uploaded Image</h6>
-        ${placeholder}
-        <div class="image-badge">
-            <i class="bi bi-exclamation-triangle text-warning me-1"></i>Image Error
-        </div>
-    `;
-}
-
-// Debug image loading
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('Checking result page images...');
-    const images = document.querySelectorAll('img');
+    const placeholder = container.querySelector('.image-placeholder') || 
+        container.nextElementSibling.querySelector('.image-placeholder');
     
-    images.forEach((img, index) => {
-        console.log(`Image ${index}:`, {
-            src: img.src,
-            alt: img.alt,
-            complete: img.complete,
-            naturalWidth: img.naturalWidth,
-            naturalHeight: img.naturalHeight
-        });
-        
-        // Check if image loaded successfully
-        if (img.complete && img.naturalWidth === 0) {
-            console.error('Image failed to load:', img.src);
-            handleImageError(img);
-        }
-    });
-});
-</script> -->
+    if (placeholder) {
+        img.style.display = 'none';
+        placeholder.style.display = 'flex';
+    }
+}
+</script>
 {% endblock %}

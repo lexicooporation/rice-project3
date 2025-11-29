@@ -384,7 +384,6 @@ def logout_view(request):
 @login_required
 def classification_history(request):
     classifications = ClassificationResult.objects.filter(user=request.user)
-    
     # Calculate stats for the template
     total_count = classifications.count()
     healthy_count = classifications.filter(predicted_class='Healthy Rice Leaf').count()
@@ -465,8 +464,6 @@ def classify_rice_disease(request):
         # Get disease information
         current_disease_info = disease_info.get(predicted_class, {})
         
-        # FIX: Create absolute URL for the image
-        absolute_file_url = request.build_absolute_uri(uploaded_file_url)
         
         # Save classification result to database only if user is logged in
         if request.user.is_authenticated:
@@ -483,7 +480,7 @@ def classify_rice_disease(request):
             result_id = None
         
         context = {
-            'uploaded_file_url': absolute_file_url,  # Use absolute URL instead of relative
+            'uploaded_file_url': uploaded_file_url,  
             'predicted_class': predicted_class,
             'confidence': confidence,
             'class_probabilities': class_probabilities,
